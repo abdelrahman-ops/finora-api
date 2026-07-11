@@ -5,6 +5,7 @@ node_modules/
 dist/
 build/
 *.js
+!api/index.js
 !*.config.js
 
 # Environment files

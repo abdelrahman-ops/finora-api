@@ -1,7 +1,6 @@
 {
   "name": "finora-server",
   "version": "1.0.0",
-  "type": "module",
   "description": "Scalable production-grade Express TypeScript API starter boilerplate",
   "main": "api/index.ts",
   "scripts": {
@@ -12,7 +11,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "change-password": "tsx scripts/change-admin-password.ts"
+    "change-password": "tsx scripts/change-admin-password.ts",
+    "vercel-build": "esbuild api/index.ts --bundle --platform=node --target=node18 --format=cjs --outfile=api/index.js --external:express --external:cors --external:helmet --external:mongoose --external:mongodb --external:bcryptjs --external:jsonwebtoken --external:nodemailer --external:winston --external:dotenv --external:express-mongo-sanitize --external:express-rate-limit --external:uuid --external:zod --external:mongodb-client-encryption"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
