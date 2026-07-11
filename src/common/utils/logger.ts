@@ -24,5 +24,5 @@ export const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
   ],
-  defaultMeta: { service: 'finora-server' },
+  defaultMeta: { service: 'finora' },
 });

@@ -1,21 +1,25 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
-import healthRoutes from './modules/health/routes';
-import { connectDatabase } from './common/config/database';
+import mongoSanitize from 'express-mongo-sanitize';
 import { env } from './common/config/env';
+import { globalLimiter } from './common/middleware/rateLimiter';
+import { errorHandler } from './common/middleware/errorHandler';
+import { requestLogger } from './common/middleware/requestLogger';
+import { registerRoutes } from './modules/index';
 
-// Load environment variables
-dotenv.config();
+import { connectDatabase } from './common/config/database';
+
+const app = express();
+
+// Set trust proxy for Vercel/proxies so express-rate-limit works properly
+app.set('trust proxy', 1);
 
 // Connect to DB for serverless environments (like Vercel) where app.ts is the entry point
 connectDatabase().catch(err => console.error('Initial DB connection error:', err));
 
-const app: Application = express();
-
 // Ensure DB is connected before processing any request
-app.use(async (_req: Request, _res: Response, next: NextFunction) => {
+app.use(async (_req, _res, next) => {
   try {
     await connectDatabase();
     next();
@@ -24,33 +28,28 @@ app.use(async (_req: Request, _res: Response, next: NextFunction) => {
   }
 });
 
-// Standard Middlewares
+// ─── Security ───
 app.use(helmet());
-app.use(cors({
-  origin: env.ALLOWED_ORIGINS,
-  credentials: true
-}));
-app.use(express.json());
+app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(mongoSanitize());
+app.use(globalLimiter);
+
+// ─── Body Parsing ───
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Core API Routes
-app.use('/api/health', healthRoutes);
+// ─── Request Logging ───
+app.use(requestLogger);
 
-// Catch-all route handler for 404s
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.method} ${req.url} not found`
-  });
+// ─── API Routes ───
+registerRoutes(app);
+
+// ─── 404 ───
+app.use((_req, res) => {
+  res.status(404).json({ success: false, error: 'Route not found' });
 });
 
-// Global Error Handler Middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('Unhandled Server Error:', err);
-  res.status(500).json({
-    success: false,
-    message: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message
-  });
-});
+// ─── Global Error Handler ───
+app.use(errorHandler);
 
 export default app;
