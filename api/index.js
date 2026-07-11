@@ -22855,12 +22855,12 @@ var init_kysely_adapter = __esm({
   }
 });
 
-// api/index.ts
-var index_exports = {};
-__export(index_exports, {
-  default: () => index_default
+// src/api-entry.ts
+var api_entry_exports = {};
+__export(api_entry_exports, {
+  default: () => api_entry_default
 });
-module.exports = __toCommonJS(index_exports);
+module.exports = __toCommonJS(api_entry_exports);
 
 // src/app.ts
 var import_express19 = __toESM(require("express"));
@@ -44668,8 +44668,8 @@ app.use((_req, res) => {
 app.use(errorHandler);
 var app_default = app;
 
-// api/index.ts
-var index_default = app_default;
+// src/api-entry.ts
+var api_entry_default = app_default;
 /*! Bundled license information:
 
 @noble/ciphers/utils.js:
