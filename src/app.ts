@@ -3,16 +3,31 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import healthRoutes from './modules/health/routes';
+import { connectDatabase } from './common/config/database';
+import { env } from './common/config/env';
 
 // Load environment variables
 dotenv.config();
 
+// Connect to DB for serverless environments (like Vercel) where app.ts is the entry point
+connectDatabase().catch(err => console.error('Initial DB connection error:', err));
+
 const app: Application = express();
+
+// Ensure DB is connected before processing any request
+app.use(async (_req: Request, _res: Response, next: NextFunction) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Standard Middlewares
 app.use(helmet());
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+  origin: env.ALLOWED_ORIGINS,
   credentials: true
 }));
 app.use(express.json());
