@@ -12,6 +12,9 @@ import alertRoutes from './alerts/routes';
 import settingRoutes from './settings/routes';
 import templateRoutes from './templates/routes';
 import eventRoutes from './events/routes';
+import analyticsRoutes from './analytics/routes';
+import dataRoutes from './data/routes';
+import notificationRoutes from './notifications/routes';
 
 /**
  * Register all API route modules under /api prefix.
@@ -31,6 +34,9 @@ export function registerRoutes(app: Express): void {
     ['/api/settings',      settingRoutes],
     ['/api/templates',     templateRoutes],
     ['/api/events',        eventRoutes],
+    ['/api/analytics',     analyticsRoutes],
+    ['/api/data',          dataRoutes],
+    ['/api/notifications', notificationRoutes],
   ];
 
   for (const [path, router] of routes) {
