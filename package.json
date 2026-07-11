@@ -1,6 +1,7 @@
 {
   "name": "finora-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "Scalable production-grade Express TypeScript API starter boilerplate",
   "main": "api/index.ts",
   "scripts": {
@@ -23,6 +24,7 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^7.5.0",
     "mongoose": "^8.9.5",
     "nodemailer": "^6.10.1",
     "uuid": "^11.0.3",

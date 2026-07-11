@@ -5,7 +5,6 @@ node_modules/
 dist/
 build/
 *.js
-!api/index.js # Exclude api/index.js if it gets generated, but we ignore standard outputs
 !*.config.js
 
 # Environment files
