@@ -1,0 +1,36 @@
+# Dependency directories
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.js
+!api/index.js # Exclude api/index.js if it gets generated, but we ignore standard outputs
+!*.config.js
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
